@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import Character from "./components/Character";
 import Boat from "./components/Boat";
 import Confetti from "react-confetti";
-
+import Prompt from "./components/Promp";
 export default function App() {
   const [characters, setCharacters] = React.useState(generateChar(3, 3));
   const [boat, setBoat] = React.useState({
@@ -14,9 +14,34 @@ export default function App() {
   });
   const [isGameOver, setIsGameOver] = React.useState(false);
   const [isLost, setIsLost] = React.useState(false);
+  const [prompt, setPrompt] = React.useState({
+    title: "",
+    message: "",
+    show: false,
+    enteranceAnim: true,
+    dismissAnim: false,
+  });
   const isCharAnimationPending = characters.some((char) => char.isAnimating);
 
   //helper functions
+
+  function showPrompt(title, message) {
+    setPrompt({
+      title: title,
+      message: message,
+      show: true,
+      enteranceAnim: true,
+      dismissAnim: false,
+    });
+  }
+  function dismissPrompt() {
+    setPrompt((prevPrompt) => ({
+      ...prevPrompt,
+      dismissAnim: true,
+      enteranceAnim: false,
+    }));
+  }
+
   function generateChar(human, zambi) {
     const charArr = [];
 
@@ -171,6 +196,12 @@ export default function App() {
     setIsLost(false);
     setBoat({ side: "left", move: false, passengers: 0, isAnimating: false });
   }
+  function aboutGame() {
+    showPrompt(
+      "about game",
+      "move all the humans to the right but be careful because if there are more zambies than human in one side your are gonna lose.(even if they are on the raft!)"
+    );
+  }
   //end event functions
   // use effects
 
@@ -196,16 +227,16 @@ export default function App() {
     if (boat.isAnimating) return;
 
     if (!boat.isAnimating && areAllHumanRight) {
-      alert("you won");
       setIsGameOver(true);
       setIsLost(false);
+      showPrompt("Congragulations!", "YOU SAVED YOUR FRIENDS!");
     } else if (
       (zambiLeft > humanLeft && humanLeft > 0) ||
       (zambiRight > humanRight && humanRight > 0)
     ) {
-      alert("zambis ate all the humans");
       setIsGameOver(true);
       setIsLost(true);
+      showPrompt("Oops!", "ZAMBIES ATE YOUR FRIENDS!");
     }
   }, [boat]);
   // end use effects
@@ -244,6 +275,7 @@ export default function App() {
 
   return (
     <div className="container">
+      {prompt.show && <Prompt prompt={prompt} dismissPrompt={dismissPrompt} />}
       {isGameOver && !isLost && <Confetti />}
       <div className="characters-container" data-left>
         {charactersArrLeft}
@@ -254,6 +286,9 @@ export default function App() {
         </button>
         <button className="btn" onClick={reset}>
           reset game
+        </button>
+        <button className="btn" onClick={aboutGame}>
+          about game
         </button>
         {
           <Boat

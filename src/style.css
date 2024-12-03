@@ -12,9 +12,10 @@
   align-items: center;
   justify-content: space-around;
   position: relative;
+  overflow: hidden;
 }
 .river {
-  width: max(25%, 300px);
+  width: max(25%, 18.75rem);
   height: 100%;
   background-image: url("images/lava.JPG");
   background-repeat: no-repeat;
@@ -37,7 +38,7 @@
   padding: 1rem 2rem;
   color: white;
   font-size: 1.2rem;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 5px 0 0px rgba(150, 16, 16, 0.863);
   transition: 0.11s linear box-shadow;
@@ -49,13 +50,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 4.25rem;
+  min-height: 4.25rem;
 }
 .boat {
   position: absolute;
   top: 50%;
   left: 1%;
-  width: 200px;
-  height: 100px;
+  width: 12.5rem;
+  height: 6.25rem;
   translate: 0 -50%;
 
   display: grid;
@@ -76,18 +79,46 @@
   transition: 0.2s ease;
 }
 .character-container {
-  width: 68px;
-  height: 68px;
+  width: 4.25rem;
+  height: 4.25rem;
   transition: 0.2s ease;
   padding: 0.8rem;
   overflow: hidden;
 }
 .character-container.onBoat {
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
 }
 .character:hover {
   scale: 1.4;
+}
+.prompt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 100;
+  background-color: blue;
+  width: 30%;
+  min-height: max(40%, 18.75rem);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  padding: 2rem;
+  background-color: rgb(207, 5, 5);
+  color: white;
+  gap: 1rem;
+}
+.prompt__title {
+  font-size: 2rem;
+}
+.prompt__message {
+  font-size: 1.2rem;
+}
+.prompt > .btn {
+  align-self: center;
 }
 
 /* animations */
@@ -128,6 +159,62 @@
   left: 1%;
   translate: 0% -50%;
 }
+.prompt-enterance {
+  -webkit-animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1)
+    both;
+  animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+.prompt-dismiss {
+  -webkit-animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53)
+    both;
+  animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+}
+
+@-webkit-keyframes slide-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+}
+@keyframes slide-out-top {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-1000px);
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+}
+@keyframes slide-in-blurred-top {
+  0% {
+    -webkit-transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+    transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 0%;
+    transform-origin: 50% 0%;
+    -webkit-filter: blur(40px);
+    filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+    transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
 @keyframes scale-in-center {
   0% {
     -webkit-transform: scale(0);
@@ -173,8 +260,8 @@
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateX(300px) scaleX(2) scaleY(0.2);
-    transform: translateX(300px) scaleX(2) scaleY(0.2);
+    -webkit-transform: translateX(10.75rem) scaleX(2) scaleY(0.2);
+    transform: translateX(10.75rem) scaleX(2) scaleY(0.2);
     -webkit-transform-origin: 0% 50%;
     transform-origin: 0% 50%;
     -webkit-filter: blur(40px);
@@ -195,8 +282,8 @@
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateX(-300px) scaleX(2) scaleY(0.2);
-    transform: translateX(-300px) scaleX(2) scaleY(0.2);
+    -webkit-transform: translateX(-10.75rem) scaleX(2) scaleY(0.2);
+    transform: translateX(-10.75rem) scaleX(2) scaleY(0.2);
     -webkit-transform-origin: 100% 50%;
     transform-origin: 100% 50%;
     -webkit-filter: blur(40px);
@@ -206,3 +293,9 @@
 }
 
 /* set animations */
+
+@media screen and (max-width: 500px) {
+  :root {
+    font-size: 12px;
+  }
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { nanoid } from "nanoid";
 import Character from "./components/Character";
 import Boat from "./components/Boat";
+import Confetti from "react-confetti";
 
 export default function App() {
   const [characters, setCharacters] = React.useState(generateChar(3, 3));
@@ -128,7 +129,13 @@ export default function App() {
     });
   }
   function moveBoat() {
-    if (boat.isAnimating || isCharAnimationPending || isGameOver) return;
+    if (
+      boat.isAnimating ||
+      isCharAnimationPending ||
+      isGameOver ||
+      boat.passengers < 1
+    )
+      return;
 
     if (boat.side === "left") {
       setBoat((prevBoat) => {
@@ -158,6 +165,12 @@ export default function App() {
       });
     }
   }
+  function reset() {
+    setCharacters(generateChar(3, 3));
+    setIsGameOver(false);
+    setIsLost(false);
+    setBoat({ side: "left", move: false, passengers: 0, isAnimating: false });
+  }
   //end event functions
   // use effects
 
@@ -178,28 +191,23 @@ export default function App() {
         zambiRight++;
       }
     });
-    console.log("human left", humanLeft);
-    console.log("human right", humanRight);
-    console.log("zambi left", zambiLeft);
-    console.log("zambi right", zambiRight);
-    const areAllCharsRight = characters.every((char) => char.side === "right");
-    console.log(areAllCharsRight);
-    if (
-      (humanRight === 0 || humanLeft === 0 || !boat.isAnimating) &&
-      !areAllCharsRight
-    )
-      return;
 
-    if (!boat.isAnimating && areAllCharsRight) {
+    const areAllHumanRight = humanRight === 3 ? true : false;
+    if (boat.isAnimating) return;
+
+    if (!boat.isAnimating && areAllHumanRight) {
       alert("you won");
       setIsGameOver(true);
       setIsLost(false);
-    } else if (zambiLeft > humanLeft || zambiRight > humanRight) {
+    } else if (
+      (zambiLeft > humanLeft && humanLeft > 0) ||
+      (zambiRight > humanRight && humanRight > 0)
+    ) {
       alert("zambis ate all the humans");
       setIsGameOver(true);
       setIsLost(true);
     }
-  }, [characters, boat]);
+  }, [boat]);
   // end use effects
   // obj to elemenet
   const charactersArrLeft = characters.map((char) => {
@@ -234,16 +242,18 @@ export default function App() {
   });
   //end obj to elemenet
 
-  // console.log("boat obj: ", boat);
-  // console.log("characters obj: ", characters);
   return (
     <div className="container">
+      {isGameOver && !isLost && <Confetti />}
       <div className="characters-container" data-left>
         {charactersArrLeft}
       </div>
       <div className="river">
-        <button className="move-btn" onClick={moveBoat}>
+        <button className="btn" onClick={moveBoat}>
           move
+        </button>
+        <button className="btn" onClick={reset}>
+          reset game
         </button>
         {
           <Boat

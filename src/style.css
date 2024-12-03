@@ -26,6 +26,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+.btn {
+  background: none;
+  outline: none;
+  border: none;
+  background-color: rgb(255, 0, 0);
+  padding: 1rem 2rem;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 0px rgba(150, 16, 16, 0.863);
+  transition: 0.11s linear box-shadow;
+}
+.btn:hover {
+  box-shadow: 0 0 0 0 transparent;
 }
 .characters-container {
   display: flex;
@@ -51,11 +69,6 @@
   background-size: cover;
 }
 
-.move-btn {
-  padding: 1rem 2rem;
-  cursor: pointer;
-  margin-top: 2rem;
-}
 .character {
   width: 100%;
   height: 100%;

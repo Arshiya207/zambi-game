@@ -80,25 +80,27 @@
 /* animations */
 .boat-to-right {
   animation-name: toRight;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
 }
 .boat-to-left {
   animation-name: toLeft;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
 }
 .char-to-right {
-  -webkit-animation: slide-out-blurred-right 0.5s
-    cubic-bezier(0.47, 0, 0.745, 0.715) 500ms both;
-  animation: slide-out-blurred-right 0.5s cubic-bezier(0.47, 0, 0.745, 0.715)
-    500ms both;
+  -webkit-animation: slide-out-blurred-right 0.2s
+    cubic-bezier(0.47, 0, 0.745, 0.715) 200ms both;
+  animation: slide-out-blurred-right 0.2s cubic-bezier(0.47, 0, 0.745, 0.715)
+    200ms both;
 }
 .char-to-left {
-  -webkit-animation: slide-out-blurred-left 0.5s
-    cubic-bezier(0.47, 0, 0.745, 0.715) 500ms both;
-  animation: slide-out-blurred-left 0.5s cubic-bezier(0.47, 0, 0.745, 0.715)
-    500ms both;
+  -webkit-animation: slide-out-blurred-left 0.2s
+    cubic-bezier(0.47, 0, 0.745, 0.715) 200ms both;
+  animation: slide-out-blurred-left 0.2s cubic-bezier(0.47, 0, 0.745, 0.715)
+    200ms both;
 }
 .charEnterance {
   -webkit-animation: scale-in-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)

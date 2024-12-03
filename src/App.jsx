@@ -11,6 +11,9 @@ export default function App() {
     passengers: 0,
     isAnimating: false,
   });
+  const [isGameOver, setIsGameOver] = React.useState(false);
+  const [isLost, setIsLost] = React.useState(false);
+  const isCharAnimationPending = characters.some((char) => char.isAnimating);
 
   //helper functions
   function generateChar(human, zambi) {
@@ -74,8 +77,7 @@ export default function App() {
   //end helper functions
   //event functions
   function boatUnboat(id) {
-    const isAnimationPending = characters.some((char) => char.isAnimating);
-    if (isAnimationPending) return;
+    if (isCharAnimationPending || boat.isAnimating || isGameOver) return;
     setCharacters((prevCharacters) => {
       return prevCharacters.map((preChar) => {
         if (preChar.id === id) {
@@ -126,7 +128,7 @@ export default function App() {
     });
   }
   function moveBoat() {
-    if (boat.isAnimating) return;
+    if (boat.isAnimating || isCharAnimationPending || isGameOver) return;
 
     if (boat.side === "left") {
       setBoat((prevBoat) => {
@@ -161,7 +163,6 @@ export default function App() {
 
   // use effect to check for win or lose
   React.useEffect(() => {
-    return;
     let humanLeft = 0;
     let humanRight = 0;
     let zambiLeft = 0;
@@ -177,24 +178,27 @@ export default function App() {
         zambiRight++;
       }
     });
-    if (
-      !boat.isAnimating &&
-      zambiRight === humanRight &&
-      humanRight !== 0 &&
-      zambiRight !== 0
-    ) {
-      alert("you won");
-    } else if (
-      (!boat.isAnimating && zambiLeft > humanLeft) ||
-      zambiRight > humanRight
-    ) {
-      alert("zambis ate all the humans");
-    }
-
     console.log("human left", humanLeft);
     console.log("human right", humanRight);
     console.log("zambi left", zambiLeft);
     console.log("zambi right", zambiRight);
+    const areAllCharsRight = characters.every((char) => char.side === "right");
+    console.log(areAllCharsRight);
+    if (
+      (humanRight === 0 || humanLeft === 0 || !boat.isAnimating) &&
+      !areAllCharsRight
+    )
+      return;
+
+    if (!boat.isAnimating && areAllCharsRight) {
+      alert("you won");
+      setIsGameOver(true);
+      setIsLost(false);
+    } else if (zambiLeft > humanLeft || zambiRight > humanRight) {
+      alert("zambis ate all the humans");
+      setIsGameOver(true);
+      setIsLost(true);
+    }
   }, [characters, boat]);
   // end use effects
   // obj to elemenet
@@ -230,8 +234,8 @@ export default function App() {
   });
   //end obj to elemenet
 
-  console.log("boat obj: ", boat);
-  console.log("characters obj: ", characters);
+  // console.log("boat obj: ", boat);
+  // console.log("characters obj: ", characters);
   return (
     <div className="container">
       <div className="characters-container" data-left>

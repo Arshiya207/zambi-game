@@ -5,16 +5,11 @@ import human from "../images/human.gif";
 export default function Character(props) {
   const classCondition = {
     toRight:
-      props.char.moveToRight && props.char.side === "left"
-        ? "to-boat-to-right"
-        : "",
+      props.char.moveToRight && props.char.isAnimating ? "char-to-right" : "",
     onBoat: props.char.onBoat ? "onBoat" : "",
     toLeft:
-      props.char.moveToLeft && props.char.side === "left"
-        ? "to-boat-to-left"
-        : "",
-    enterance:
-      !props.char.moveToRight && !props.char.moveToLeft ? "charEnterance " : "",
+      props.char.moveToLeft && props.char.isAnimating ? "char-to-left" : "",
+    enterance: !props.char.isAnimating ? "charEnterance " : "",
   };
   //use effects
   React.useEffect(() => {

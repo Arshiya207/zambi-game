@@ -9,6 +9,7 @@ export default function App() {
     side: "left",
     move: false,
     passengers: 0,
+    isAnimating: false,
   });
 
   //helper functions
@@ -24,6 +25,7 @@ export default function App() {
         src: "human",
         moveToRight: false,
         moveToLeft: false,
+        isAnimating: false,
       });
     }
     for (let i = 0; i < zambi; i++) {
@@ -35,42 +37,11 @@ export default function App() {
         src: "zambi",
         moveToRight: false,
         moveToLeft: false,
+        isAnimating: false,
       });
     }
 
     return charArr;
-  }
-
-  //end helper functions
-  //event functions
-  function boatUnboat(id) {
-    setCharacters((prevCharacters) => {
-      return prevCharacters.map((preChar) => {
-        if (preChar.id === id) {
-          if (boat.side === "left" && preChar.onBoat) {
-            console.log("boat to unboat");
-            removePassenger();
-            return {
-              ...preChar,
-              onBoat: false,
-              moveToLeft: true,
-              moveToRight: false,
-            };
-          } else if (boat.side === "right" && preChar.onBoat) {
-          } else if (!preChar.onBoat && preChar.side === "left") {
-            if (boat.passengers === 2) return preChar;
-            addPassenger();
-            return {
-              ...preChar,
-              onBoat: true,
-              moveToRight: true,
-              moveToLeft: false,
-            };
-          } else {
-          }
-        } else return preChar;
-      });
-    });
   }
   function addPassenger() {
     setBoat((prevBoat) => {
@@ -89,23 +60,149 @@ export default function App() {
           ...preChar,
           moveToLeft: false,
           moveToRight: false,
+          isAnimating: false,
         };
       });
     });
   }
+  function stopBoatMove() {
+    setBoat((prevBoat) => {
+      return { ...prevBoat, move: false, isAnimating: false };
+    });
+  }
+
+  //end helper functions
+  //event functions
+  function boatUnboat(id) {
+    const isAnimationPending = characters.some((char) => char.isAnimating);
+    if (isAnimationPending) return;
+    setCharacters((prevCharacters) => {
+      return prevCharacters.map((preChar) => {
+        if (preChar.id === id) {
+          if (boat.side === "left" && preChar.onBoat) {
+            // unboat to left
+            removePassenger();
+            return {
+              ...preChar,
+              onBoat: false,
+              moveToLeft: true,
+              moveToRight: false,
+              isAnimating: true,
+            };
+          } else if (boat.side === "right" && preChar.onBoat) {
+            //unboat to the right
+            removePassenger();
+            return {
+              ...preChar,
+              onBoat: false,
+              moveToLeft: false,
+              moveToRight: true,
+              isAnimating: true,
+            };
+          } else if (!preChar.onBoat && preChar.side === "left") {
+            // add to boat from left if passenger are 2 do nothing and return the obj
+            if (boat.passengers === 2 || boat.side === "right") return preChar;
+            addPassenger();
+            return {
+              ...preChar,
+              onBoat: true,
+              moveToRight: true,
+              moveToLeft: false,
+              isAnimating: true,
+            };
+          } else if (!preChar.onBoat && preChar.side === "right") {
+            if (boat.passengers === 2 || boat.side === "left") return preChar;
+            addPassenger();
+            return {
+              ...preChar,
+              onBoat: true,
+              moveToRight: false,
+              moveToLeft: true,
+              isAnimating: true,
+            };
+          }
+        } else return preChar;
+      });
+    });
+  }
+  function moveBoat() {
+    if (boat.isAnimating) return;
+
+    if (boat.side === "left") {
+      setBoat((prevBoat) => {
+        return { ...prevBoat, move: true, isAnimating: true, side: "right" };
+      });
+      setCharacters((prevCharacters) => {
+        return prevCharacters.map((char) => {
+          if (char.onBoat) {
+            return { ...char, side: "right" };
+          } else {
+            return char;
+          }
+        });
+      });
+    } else {
+      setBoat((prevBoat) => {
+        return { ...prevBoat, move: true, isAnimating: true, side: "left" };
+      });
+      setCharacters((prevCharacters) => {
+        return prevCharacters.map((char) => {
+          if (char.onBoat) {
+            return { ...char, side: "left" };
+          } else {
+            return char;
+          }
+        });
+      });
+    }
+  }
   //end event functions
+  // use effects
+
+  // use effect to check for win or lose
+  React.useEffect(() => {
+    return;
+    let humanLeft = 0;
+    let humanRight = 0;
+    let zambiLeft = 0;
+    let zambiRight = 0;
+    characters.forEach((char) => {
+      if (char.side === "right" && char.type === "human") {
+        humanRight++;
+      } else if (char.side === "left" && char.type === "human") {
+        humanLeft++;
+      } else if (char.side === "left" && char.type === "zambi") {
+        zambiLeft++;
+      } else if (char.side === "right" && char.type === "zambi") {
+        zambiRight++;
+      }
+    });
+    if (
+      !boat.isAnimating &&
+      zambiRight === humanRight &&
+      humanRight !== 0 &&
+      zambiRight !== 0
+    ) {
+      alert("you won");
+    } else if (
+      (!boat.isAnimating && zambiLeft > humanLeft) ||
+      zambiRight > humanRight
+    ) {
+      alert("zambis ate all the humans");
+    }
+
+    console.log("human left", humanLeft);
+    console.log("human right", humanRight);
+    console.log("zambi left", zambiLeft);
+    console.log("zambi right", zambiRight);
+  }, [characters, boat]);
+  // end use effects
   // obj to elemenet
-  const charactersArr = characters.map((char) => {
-    if (!char.onBoat && !char.moveToLeft) {
-      return (
-        <Character
-          key={char.id}
-          char={char}
-          boatUnboat={boatUnboat}
-          animeFinish={animationFinsih}
-        />
-      );
-    } else if (char.onBoat && char.moveToRight) {
+  const charactersArrLeft = characters.map((char) => {
+    if (
+      (char.side === "left" && !char.onBoat && !char.isAnimating) ||
+      (char.onBoat && char.isAnimating && char.side !== "right")
+    ) {
       return (
         <Character
           key={char.id}
@@ -116,23 +213,46 @@ export default function App() {
       );
     }
   });
-
+  const charactersArrRight = characters.map((char) => {
+    if (
+      (char.side === "right" && !char.onBoat && !char.isAnimating) ||
+      (char.onBoat && char.isAnimating && char.side !== "left")
+    ) {
+      return (
+        <Character
+          key={char.id}
+          char={char}
+          boatUnboat={boatUnboat}
+          animeFinish={animationFinsih}
+        />
+      );
+    }
+  });
   //end obj to elemenet
 
-  console.log(characters);
+  console.log("boat obj: ", boat);
+  console.log("characters obj: ", characters);
   return (
     <div className="container">
-      <div className="characters-container">{charactersArr}</div>
+      <div className="characters-container" data-left>
+        {charactersArrLeft}
+      </div>
       <div className="river">
-        <button className="move-btn">move</button>
+        <button className="move-btn" onClick={moveBoat}>
+          move
+        </button>
         {
           <Boat
             boat={boat}
             characters={characters}
             boatUnboat={boatUnboat}
             animeFinish={animationFinsih}
+            stopBoatMove={stopBoatMove}
           />
         }
+      </div>
+      <div className="characters-container" data-right>
+        {charactersArrRight}
       </div>
     </div>
   );

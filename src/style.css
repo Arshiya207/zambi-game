@@ -8,12 +8,14 @@
 .container {
   height: 100dvh;
   background-color: rgb(48, 24, 10);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
   position: relative;
 }
 .river {
-  width: 25%;
+  width: max(25%, 300px);
   height: 100%;
-  margin: auto;
   background-image: url("images/lava.JPG");
   background-repeat: no-repeat;
   background-position: center;
@@ -26,10 +28,6 @@
   align-items: center;
 }
 .characters-container {
-  position: absolute;
-  top: 50%;
-  translate: 0 -50%;
-  margin-left: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -80,23 +78,23 @@
 }
 
 /* animations */
-.to-right {
+.boat-to-right {
   animation-name: toRight;
   animation-duration: 1s;
   animation-fill-mode: forwards;
 }
-.to-left {
+.boat-to-left {
   animation-name: toLeft;
   animation-duration: 1s;
   animation-fill-mode: forwards;
 }
-.to-boat-to-right {
+.char-to-right {
   -webkit-animation: slide-out-blurred-right 0.5s
     cubic-bezier(0.47, 0, 0.745, 0.715) 500ms both;
   animation: slide-out-blurred-right 0.5s cubic-bezier(0.47, 0, 0.745, 0.715)
     500ms both;
 }
-.to-boat-to-left {
+.char-to-left {
   -webkit-animation: slide-out-blurred-left 0.5s
     cubic-bezier(0.47, 0, 0.745, 0.715) 500ms both;
   animation: slide-out-blurred-left 0.5s cubic-bezier(0.47, 0, 0.745, 0.715)
@@ -106,6 +104,14 @@
   -webkit-animation: scale-in-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
     both;
   animation: scale-in-center 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+.stay-right {
+  left: 100%;
+  translate: -101% -50%;
+}
+.stay-left {
+  left: 1%;
+  translate: 0% -50%;
 }
 @keyframes scale-in-center {
   0% {

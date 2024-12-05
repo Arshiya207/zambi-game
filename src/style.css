@@ -41,9 +41,9 @@
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 5px 0 0px rgba(150, 16, 16, 0.863);
-  transition: 0.11s linear box-shadow;
+  transition: 0.02s linear box-shadow;
 }
-.btn:hover {
+.btn:active {
   box-shadow: 0 0 0 0 transparent;
 }
 .characters-container {
@@ -99,7 +99,7 @@
   translate: -50% -50%;
   z-index: 100;
   background-color: blue;
-  width: 30%;
+  width: max(30%, 400px);
   min-height: max(40%, 18.75rem);
   border-radius: 10px;
   display: flex;
@@ -165,9 +165,10 @@
   animation: slide-in-blurred-top 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 .prompt-dismiss {
-  -webkit-animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53)
+  -webkit-animation: slide-out-blurred-top 0.45s
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-out-blurred-top 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)
     both;
-  animation: slide-out-top 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 }
 
 @-webkit-keyframes slide-out-top {
@@ -248,25 +249,43 @@
   }
 }
 
-@keyframes slide-out-blurred-right {
+@-webkit-keyframes slide-out-blurred-top {
   0% {
-    -webkit-transform: translateX(0) scaleY(1) scaleX(1);
-    transform: translateX(0) scaleY(1) scaleX(1);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+    transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 0;
+    transform-origin: 50% 0;
     -webkit-filter: blur(0);
     filter: blur(0);
-
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateX(10.75rem) scaleX(2) scaleY(0.2);
-    transform: translateX(10.75rem) scaleX(2) scaleY(0.2);
-    -webkit-transform-origin: 0% 50%;
-    transform-origin: 0% 50%;
+    -webkit-transform: translateY(-1000px) scaleY(2) scaleX(0.2);
+    transform: translateY(-1000px) scaleY(2) scaleX(0.2);
+    -webkit-transform-origin: 50% 0;
+    transform-origin: 50% 0;
     -webkit-filter: blur(40px);
     filter: blur(40px);
-
+    opacity: 0;
+  }
+}
+@keyframes slide-out-blurred-top {
+  0% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+    transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 0;
+    transform-origin: 50% 0;
+    -webkit-filter: blur(0);
+    filter: blur(0);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-1000px) scaleY(2) scaleX(0.2);
+    transform: translateY(-1000px) scaleY(2) scaleX(0.2);
+    -webkit-transform-origin: 50% 0;
+    transform-origin: 50% 0;
+    -webkit-filter: blur(40px);
+    filter: blur(40px);
     opacity: 0;
   }
 }
@@ -296,6 +315,9 @@
 
 @media screen and (max-width: 500px) {
   :root {
-    font-size: 12px;
+    font-size: 14px;
+  }
+  .prompt {
+    width: 80%;
   }
 }

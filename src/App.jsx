@@ -224,9 +224,11 @@ export default function App() {
     });
 
     const areAllHumanRight = humanRight === 3 ? true : false;
-    if (boat.isAnimating) return;
+    const rightAndUnboat = characters.every((char) => {
+      return areAllHumanRight && !char.onBoat && !char.isAnimating;
+    });
 
-    if (!boat.isAnimating && areAllHumanRight) {
+    if (rightAndUnboat) {
       setIsGameOver(true);
       setIsLost(false);
       showPrompt("Congragulations!", "YOU SAVED YOUR FRIENDS!");
@@ -238,7 +240,7 @@ export default function App() {
       setIsLost(true);
       showPrompt("Oops!", "ZAMBIES ATE YOUR FRIENDS!");
     }
-  }, [boat]);
+  }, [characters]);
   // end use effects
   // obj to elemenet
   const charactersArrLeft = characters.map((char) => {

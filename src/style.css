@@ -40,11 +40,13 @@
   font-size: 1.2rem;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 5px 0 0px rgba(150, 16, 16, 0.863);
-  transition: 0.02s linear box-shadow;
+  box-shadow: 0 2px 0 0px rgba(150, 16, 16, 0.863);
+  transition: 0.002s linear all;
+  transform: perspective(700px) translatez(20px);
 }
-.btn:hover {
+.btn:active {
   box-shadow: 0 0 0 0 transparent;
+  transform: perspective(700px) translatez(0px);
 }
 .characters-container {
   display: flex;
